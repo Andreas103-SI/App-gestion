@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+</head>
+<body>
+    <h1>Gestión de Usuarios</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario[0] }}</td>
+            <td>{{ usuario[1] }}</td>
+            <td>{{ usuario[2] }}</td>
+            <td>
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="{{ usuario[0] }}">
+                    <input type="text" name="nombre" value="{{ usuario[1] }}">
+                    <input type="email" name="email" value="{{ usuario[2] }}">
+                    <button type="submit" name="action" value="edit">Editar</button>
+                </form>
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="{{ usuario[0] }}">
+                    <button type="submit" name="action" value="delete">Borrar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

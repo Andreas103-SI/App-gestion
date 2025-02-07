@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+</head>
+<body>
+    <h1>Bienvenido a la aplicación de gestión administrativa</h1>
+    <p>Hola, {{ current_user.nombre }}</p>
+    <a href="{{ url_for('usuarios') }}">Gestionar Usuarios</a><br>
+    <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+</body>
+</html>
