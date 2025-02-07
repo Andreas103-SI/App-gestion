@@ -2,10 +2,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
-    
+
+# Configuración de la base de datos
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''  # Tu contraseña de MySQL si tienes una
+app.config['MYSQL_DB'] = 'proyecto_app'
+
 mysql = MySQL(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -42,14 +49,16 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        # Obtener los datos del formulario
         email = request.form['email']
         password = request.form['password']
         
+        # Guardar los datos en la base de datos
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
         user_data = cursor.fetchone()
 
-        if user_data and user_data[3] == password:  # Compara con password (deberías encriptarlo)
+        if user_data and check_password_hash(user_data[3], password):  # Compara con el hash de la contraseña
             user = User(id=user_data[0], nombre=user_data[1], email=user_data[2], rol=user_data[4])
             login_user(user)
             return redirect(url_for('index'))
@@ -93,6 +102,29 @@ def usuarios():
         return redirect(url_for('usuarios'))
 
     return render_template('usuarios.html', usuarios=usuarios)
+
+
+# Ruta para registrar un nuevo usuario
+@app.route('/registrar', methods=['GET', 'POST'])
+def registrar():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        nombre = request.form['nombre']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Hashear la contraseña antes de almacenarla
+        password = generate_password_hash(password)
+
+        # Guardar los datos en la base de datos
+        cursor = mysql.connection.cursor()
+        cursor.execute('''INSERT INTO usuarios (nombre, email, password) 
+                          VALUES (%s, %s, %s)''', (nombre, email, password))
+        mysql.connection.commit()
+        cursor.close()
+        
+        return redirect(url_for('login'))  # Redirigir a la página de login
+    return render_template('registrar.html')
 
 
 if __name__ == '__main__':
