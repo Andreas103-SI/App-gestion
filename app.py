@@ -137,6 +137,11 @@ def monitor():
     # Devuelve la información obtenida en formato JSON, lo que facilita su uso en aplicaciones web o APIs.
     return jsonify(usage)
 
+@app.route('/monitor_view')
+def monitor_view():
+    # Esta ruta renderiza la plantilla HTML.
+    return render_template('monitor.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
