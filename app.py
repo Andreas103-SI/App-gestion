@@ -3,6 +3,9 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, jsonify
+from monitor import get_system_usage
+
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -125,6 +128,14 @@ def registrar():
         
         return redirect(url_for('login'))  # Redirigir a la página de login
     return render_template('registrar.html')
+
+@app.route('/monitor')
+def monitor():
+    # Llama a la función 'get_system_usage()' que obtiene el uso de CPU, memoria y disco.
+    usage = get_system_usage()
+    
+    # Devuelve la información obtenida en formato JSON, lo que facilita su uso en aplicaciones web o APIs.
+    return jsonify(usage)
 
 
 if __name__ == '__main__':

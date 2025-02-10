@@ -32,6 +32,10 @@ Esta aplicación web está desarrollada utilizando Python y Flask, y tiene como 
 - Otras dependencias necesarias (ver `requirements.txt`)
 
 ## Instalación
+## Instalación de dependencias adicionales:
+```bash
+pip install psutil plyer
+
 
 ### 1. Clonar el repositorio
 
