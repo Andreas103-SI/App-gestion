@@ -170,4 +170,7 @@ def optimizer():
 
 
 if __name__ == '__main__':
+    print("🚀 Servidor corriendo en http://127.0.0.1:5000")
+    print("🔍 Monitoreo de recursos: http://127.0.0.1:5000/monitor_view")
+    print("⚡ Optimización de procesos: http://127.0.0.1:5000/optimizer")
     app.run(debug=True)
