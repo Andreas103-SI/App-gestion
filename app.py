@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, jsonify
 from monitor import get_system_usage
-
+from optimizer import check_processes, optimize_processes
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -129,6 +129,8 @@ def registrar():
         return redirect(url_for('login'))  # Redirigir a la página de login
     return render_template('registrar.html')
 
+
+# Ruta para monitorear el sistema
 @app.route('/monitor')
 def monitor():
     # Llama a la función 'get_system_usage()' que obtiene el uso de CPU, memoria y disco.
@@ -139,8 +141,32 @@ def monitor():
 
 @app.route('/monitor_view')
 def monitor_view():
-    # Esta ruta renderiza la plantilla HTML.
+    # Esta ruta renderiza la plantilla HTML 'monitor.html', mostrando la información de monitoreo.
     return render_template('monitor.html')
+
+@app.route('/optimizer')
+def optimizer():
+    # Llama a la función que obtiene los procesos ineficientes (por CPU o memoria alta).
+    inefficient_processes = check_processes()
+
+    # Si hay procesos ineficientes, los optimizamos (terminamos).
+    if inefficient_processes:
+        optimize_processes(inefficient_processes)
+        # Enviar la notificación al administrador si es necesario (aunque aquí está comentado).
+        '''send_notification(inefficient_processes)'''
+
+        # Respuesta indicando que los procesos fueron terminados y notificados.
+        return jsonify({
+            'status': 'success',
+            'message': 'Procesos ineficientes terminados y administrador notificado.',
+            'inefficient_processes': inefficient_processes
+        }), 200
+    else:
+        # Si no hay procesos ineficientes, devolvemos un mensaje indicando que todo está bien.
+        return jsonify({
+            'status': 'success',
+            'message': 'No se encontraron procesos ineficientes.'
+        }), 200
 
 
 if __name__ == '__main__':

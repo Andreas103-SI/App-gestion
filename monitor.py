@@ -22,3 +22,4 @@ if __name__ == '__main__':
     print(f"Uso de CPU: {usage['cpu']}%")
     print(f"Uso de Memoria: {usage['memory']}%")
     print(f"Uso de Disco: {usage['disk']}%")
+

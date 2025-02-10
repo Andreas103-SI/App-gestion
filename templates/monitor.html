@@ -4,28 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoreo de Recursos</title>
-</head>
-<body>
-    <h1>Estado del Sistema</h1>
-    <div id="resource-usage">
-        <!-- Aquí se mostrarán los datos -->
-    </div>
-
     <script>
-        async function fetchUsage() {
-            const response = await fetch('/monitor');
-            const data = await response.json();
-            document.getElementById('resource-usage').innerHTML = `
-                <p>CPU: ${data.cpu}%</p>
-                <p>Memoria: ${data.memory}%</p>
-                <p>Disco: ${data.disk}%</p>
-            `;
+        function fetchOptimizerData() {
+            fetch('/optimizer')
+                .then(response => response.json())
+                .then(data => {
+                    let messageElement = document.getElementById('optimizer-message');
+                    if (data.inefficient_processes && data.inefficient_processes.length > 0) {
+                        messageElement.innerHTML = `<b>Procesos ineficientes detectados y terminados:</b><br>${JSON.stringify(data.inefficient_processes, null, 2)}`;
+                        messageElement.style.color = 'red';
+                    } else {
+                        messageElement.innerHTML = "✅ No se encontraron procesos ineficientes.";
+                        messageElement.style.color = 'green';
+                    }
+                })
+                .catch(error => {
+                    console.error("Error obteniendo datos:", error);
+                    document.getElementById('optimizer-message').innerHTML = "❌ Error al obtener los datos.";
+                });
         }
-
-        // Actualiza los datos cada 5 segundos
-        setInterval(fetchUsage, 5000);
-        // Llama inmediatamente a la función para mostrar datos al cargar la página
-        fetchUsage();
     </script>
+</head>
+<body onload="fetchOptimizerData()">
+    <h1>Monitoreo y Optimización de Procesos</h1>
+    <p id="optimizer-message">Cargando información...</p>
 </body>
 </html>
