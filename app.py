@@ -168,6 +168,18 @@ def optimizer():
             'message': 'No se encontraron procesos ineficientes.'
         }), 200
 
+#Gestion de tareas Administrativas
+''' Aqui se muestra la gestion de tareas administrativas, como la creacion de notificaciones de limpieza de logs'''
+
+
+@app.route('/notificaciones')
+@login_required
+def notificaciones():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM notificaciones ORDER BY fecha DESC")
+    notificaciones = cursor.fetchall()
+    return render_template('notificaciones.html', notificaciones=notificaciones)
+
 
 if __name__ == '__main__':
     print("🚀 Servidor corriendo en http://127.0.0.1:5000")
