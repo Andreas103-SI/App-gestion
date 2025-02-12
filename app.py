@@ -1,4 +1,4 @@
-# app.py
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, jsonify
 from monitor import get_system_usage
 from optimizer import check_processes, optimize_processes
+from send import send_notification
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -150,27 +151,24 @@ def monitor_view():
 
 @app.route('/optimizer')
 def optimizer():
-    # Llama a la función que obtiene los procesos ineficientes (por CPU o memoria alta).
+    # Llama a la función que obtiene los procesos ineficientes
     inefficient_processes = check_processes()
 
-    # Si hay procesos ineficientes, los optimizamos (terminamos).
     if inefficient_processes:
         optimize_processes(inefficient_processes)
-        # Enviar la notificación al administrador si es necesario (aunque aquí está comentado).
-        '''send_notification(inefficient_processes)'''
-
-        # Respuesta indicando que los procesos fueron terminados y notificados.
+        # Enviar la notificación al administrador insertándola en la BD
+        send_notification(mysql, inefficient_processes)
         return jsonify({
             'status': 'success',
             'message': 'Procesos ineficientes terminados y administrador notificado.',
             'inefficient_processes': inefficient_processes
         }), 200
     else:
-        # Si no hay procesos ineficientes, devolvemos un mensaje indicando que todo está bien.
         return jsonify({
             'status': 'success',
             'message': 'No se encontraron procesos ineficientes.'
         }), 200
+
 
 #Gestion de tareas Administrativas
 ''' Aqui se muestra la gestion de tareas administrativas, como la creacion de notificaciones de limpieza de logs'''
