@@ -47,7 +47,11 @@ cd proyecto_app
 
 ```bash
 python -m venv venv
+<<<<<<< HEAD
 venv\Scripts\activate  # En Windows
+=======
+source venv/bin/activate 
+>>>>>>> 6c29cb27a6d4f03663621345fa743b210a9c127c
 pip install -r requirements.txt
 ```
 
