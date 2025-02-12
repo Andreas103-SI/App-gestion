@@ -80,11 +80,15 @@ def logout():
 
 
 # Ruta para gestionar usuarios
+
 @app.route('/usuarios', methods=['GET', 'POST'])
 @login_required
 def usuarios():
-    cursor = mysql.connection.cursor()
+    # Verificar si el usuario actual es administrador
+    if current_user.rol != 'admin':
+        return "Acceso no autorizado. Solo los administradores pueden acceder a esta página.", 403
 
+    cursor = mysql.connection.cursor()
     # Obtener todos los usuarios
     cursor.execute("SELECT * FROM usuarios")
     usuarios = cursor.fetchall()

@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios</title>
+    <title>Gestión de Usuarios</title>
 </head>
 <body>
     <h1>Gestión de Usuarios</h1>
@@ -20,6 +19,7 @@
             <td>{{ usuario[1] }}</td>
             <td>{{ usuario[2] }}</td>
             <td>
+                {% if current_user.rol == 'admin' %}
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="id" value="{{ usuario[0] }}">
                     <input type="text" name="nombre" value="{{ usuario[1] }}">
@@ -30,6 +30,9 @@
                     <input type="hidden" name="id" value="{{ usuario[0] }}">
                     <button type="submit" name="action" value="delete">Borrar</button>
                 </form>
+                {% else %}
+                    <span>No autorizado</span>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
