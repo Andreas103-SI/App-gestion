@@ -7,6 +7,8 @@ from flask import Flask, jsonify
 from monitor import get_system_usage
 from optimizer import check_processes, optimize_processes
 from send import send_notification
+from reports import get_system_report
+
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -181,6 +183,13 @@ def notificaciones():
     cursor.execute("SELECT * FROM notificaciones ORDER BY fecha DESC")
     notificaciones = cursor.fetchall()
     return render_template('notificaciones.html', notificaciones=notificaciones)
+
+# Ruta para crear informes del sistema y mostrar en una plantilla HTML
+@app.route('/system_report')
+def system_report():
+    report = get_system_report()  # Aquí obtienes el informe de 'reports.py'
+    return render_template('system_report.html', report=report)
+
 
 
 if __name__ == '__main__':

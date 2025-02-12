@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe del Sistema</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Informe de Uso del Sistema</h1>
+    <p>Fecha y hora del informe: {{ report.timestamp }}</p>
+    <table>
+        <tr>
+            <th>Procesos Activos</th>
+            <td>{{ report.active_processes }}</td>
+        </tr>
+        <tr>
+            <th>Uso de CPU (%)</th>
+            <td>{{ report.cpu_usage }}</td>
+        </tr>
+        <tr>
+            <th>Uso de Disco (%)</th>
+            <td>{{ report.disk_usage }}</td>
+        </tr>
+        <tr>
+            <th>Uso de Memoria (%)</th>
+            <td>{{ report.memory_usage }}</td>
+        </tr>
+    </table>
+</body>
+</html>
