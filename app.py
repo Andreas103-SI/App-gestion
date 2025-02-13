@@ -8,6 +8,8 @@ from monitor import get_system_usage
 from optimizer import check_processes, optimize_processes
 from send import send_notification
 from reports import get_system_report
+from logger_config import logger
+
 
 
 app = Flask(__name__)
@@ -55,22 +57,23 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Obtener los datos del formulario
         email = request.form['email']
         password = request.form['password']
-        
-        # Guardar los datos en la base de datos
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-        user_data = cursor.fetchone()
-
-        if user_data and check_password_hash(user_data[3], password):  # Compara con el hash de la contraseña
-            user = User(id=user_data[0], nombre=user_data[1], email=user_data[2], rol=user_data[4])
-            login_user(user)
-            return redirect(url_for('index'))
-        else:
-            return "Credenciales incorrectas, inténtalo nuevamente."
-
+        try:
+            cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+            user_data = cursor.fetchone()
+            if user_data and check_password_hash(user_data[3], password):
+                user = User(id=user_data[0], nombre=user_data[1], email=user_data[2], rol=user_data[4])
+                login_user(user)
+                logger.info(f"El usuario {email} inició sesión correctamente.")
+                return redirect(url_for('index'))
+            else:
+                logger.warning(f"Intento fallido de inicio de sesión para el email: {email}")
+                return "Credenciales incorrectas, inténtalo nuevamente."
+        except Exception as e:
+            logger.exception("Error durante el proceso de login")
+            return "Ha ocurrido un error en el proceso de login", 500
     return render_template('login.html')
 
 
@@ -118,22 +121,21 @@ def usuarios():
 @app.route('/registrar', methods=['GET', 'POST'])
 def registrar():
     if request.method == 'POST':
-        # Obtener los datos del formulario
         nombre = request.form['nombre']
         email = request.form['email']
         password = request.form['password']
-        
-        # Hashear la contraseña antes de almacenarla
-        password = generate_password_hash(password)
-
-        # Guardar los datos en la base de datos
-        cursor = mysql.connection.cursor()
-        cursor.execute('''INSERT INTO usuarios (nombre, email, password) 
-                          VALUES (%s, %s, %s)''', (nombre, email, password))
-        mysql.connection.commit()
-        cursor.close()
-        
-        return redirect(url_for('login'))  # Redirigir a la página de login
+        try:
+            password_hash = generate_password_hash(password)
+            cursor = mysql.connection.cursor()
+            cursor.execute('''INSERT INTO usuarios (nombre, email, password) 
+                              VALUES (%s, %s, %s)''', (nombre, email, password_hash))
+            mysql.connection.commit()
+            cursor.close()
+            logger.info(f"Usuario registrado: {email}")
+            return redirect(url_for('login'))
+        except Exception as e:
+            logger.exception("Error durante el registro de usuario")
+            return "Error en el registro del usuario", 500
     return render_template('registrar.html')
 
 
@@ -151,25 +153,30 @@ def monitor_view():
     # Esta ruta renderiza la plantilla HTML 'monitor.html', mostrando la información de monitoreo.
     return render_template('monitor.html')
 
+
+#Rura de optimizacion de procesos
 @app.route('/optimizer')
 def optimizer():
-    # Llama a la función que obtiene los procesos ineficientes
-    inefficient_processes = check_processes()
-
-    if inefficient_processes:
-        optimize_processes(inefficient_processes)
-        # Enviar la notificación al administrador insertándola en la BD
-        send_notification(mysql, inefficient_processes)
-        return jsonify({
-            'status': 'success',
-            'message': 'Procesos ineficientes terminados y administrador notificado.',
-            'inefficient_processes': inefficient_processes
-        }), 200
-    else:
-        return jsonify({
-            'status': 'success',
-            'message': 'No se encontraron procesos ineficientes.'
-        }), 200
+    try:
+        inefficient_processes = check_processes()
+        if inefficient_processes:
+            optimize_processes(inefficient_processes)
+            send_notification(mysql, inefficient_processes)
+            logger.info("Procesos ineficientes detectados y optimizados.")
+            return jsonify({
+                'status': 'success',
+                'message': 'Procesos ineficientes terminados y administrador notificado.',
+                'inefficient_processes': inefficient_processes
+            }), 200
+        else:
+            logger.info("No se encontraron procesos ineficientes.")
+            return jsonify({
+                'status': 'success',
+                'message': 'No se encontraron procesos ineficientes.'
+            }), 200
+    except Exception as e:
+        logger.exception("Error durante la optimización de procesos")
+        return jsonify({'status': 'error', 'message': 'Error en la optimización.'}), 500
 
 
 #Gestion de tareas Administrativas
