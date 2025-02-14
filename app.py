@@ -14,13 +14,20 @@ from flask import Response
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from io import BytesIO, StringIO
+import cProfile
 import pstats
-
+from flask_caching import Cache
+from config import Config
 
 
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+app.config.from_object('config.Config')  # Cargar configuración desde config.py
+
+app.config['CACHE_TYPE'] = 'simple'  # Usando caché simple en memoria
+cache = Cache(app, config={
+
+}) # Inicializar la extensión de cach
 
 # Configuración de la base de datos
 app.config['MYSQL_HOST'] = 'localhost'
@@ -31,6 +38,7 @@ app.config['MYSQL_DB'] = 'proyecto_app'
 mysql = MySQL(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
 
 
 # Modelo de usuario
@@ -259,15 +267,44 @@ def export_pdf():
                     headers={"Content-Disposition": "attachment; filename=system_report.pdf"})
 
 
+@app.route('/data')
+def data():
+    return 'Datos importantes'
 
-stats = pstats.Stats('profile_stats.prof') # Carga el archivo de estadísticas de perfil
-stats.sort_stats('cumulative').print_stats(10)  # Muestra las 10 funciones más lentas
+def profile_view():
+    profiler = cProfile.Profile()
+    profiler.enable()
+
+    # Llama a la ruta que quieres perfilar
+    with app.test_client() as client:
+        response = client.get('/data')  # Simula una solicitud GET a la ruta /data
+
+    profiler.disable()
+
+    # Guardar el perfil de estadísticas en un archivo
+    profiler.dump_stats('profile_stats.prof')
+
+    # Cargar el archivo de estadísticas
+    stats = pstats.Stats('profile_stats.prof')
+
+    # Imprimir los datos de profiling en la consola
+    stats.sort_stats('cumulative').print_stats(5)  # Muestra las 5 funciones más lentas
+
+    return response.data
 
 
+@app.route('/test_cache')
+@cache.cached(timeout=60)  # Se almacena en caché por 60 segundos
+def test_cache():
+    import time
+    time.sleep(5)  # Simula una operación lenta
+    return "Esta respuesta fue almacenada en caché."
 
 
 if __name__ == '__main__':
     print("🚀 Servidor corriendo en http://127.0.0.1:5000")
     print("🔍 Monitoreo de recursos: http://127.0.0.1:5000/monitor_view")
     print("⚡ Optimización de procesos: http://127.0.0.1:5000/optimizer")
+
+    profile_view()  # Llama a la función que ejecuta el perfilado
     app.run(debug=True)
