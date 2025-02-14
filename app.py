@@ -14,6 +14,7 @@ from flask import Response
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from io import BytesIO, StringIO
+import pstats
 
 
 
@@ -256,6 +257,12 @@ def export_pdf():
     return Response(buffer.getvalue(),
                     mimetype="application/pdf",
                     headers={"Content-Disposition": "attachment; filename=system_report.pdf"})
+
+
+
+stats = pstats.Stats('profile_stats.prof') # Carga el archivo de estadísticas de perfil
+stats.sort_stats('cumulative').print_stats(10)  # Muestra las 10 funciones más lentas
+
 
 
 
