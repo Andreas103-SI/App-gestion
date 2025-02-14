@@ -9,6 +9,12 @@ from optimizer import check_processes, optimize_processes
 from send import send_notification
 from reports import get_system_report
 from logger_config import logger
+import csv
+from io import StringIO
+from flask import Response
+from io import BytesIO
+from reportlab.pdfgen import canvas
+
 
 
 
@@ -196,6 +202,64 @@ def notificaciones():
 def system_report():
     report = get_system_report()  # Aquí obtienes el informe de 'reports.py'
     return render_template('system_report.html', report=report)
+
+
+# Ruta para exportar el informe del sistema a un archivo CSV
+@app.route('/export/csv')
+def export_csv():
+    report = get_system_report()  # Obtiene el informe del sistema
+    si = StringIO()
+    writer = csv.writer(si)
+
+    # Escribe el encabezado y los datos del informe
+    writer.writerow(["Métrica", "Valor"])
+    writer.writerow(["Fecha y hora", report['timestamp']])
+    writer.writerow(["Procesos Activos", report['active_processes']])
+    writer.writerow(["Uso de CPU (%)", report['cpu_usage']])
+    writer.writerow(["Uso de Disco (%)", report['disk_usage']])
+    writer.writerow(["Uso de Memoria (%)", report['memory_usage']])
+    
+    output = si.getvalue()
+    return Response(
+        output,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=system_report.csv"}
+    )
+
+
+# Ruta para exportar el informe del sistema a un archivo PDF
+@app.route('/export/pdf')
+def export_pdf():
+    report = get_system_report()  # Obtiene el informe del sistema
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+
+    # Título del informe
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(50, 800, "Informe de Uso del Sistema")
+    
+    # Contenido del informe
+    p.setFont("Helvetica", 12)
+    y = 770
+    p.drawString(50, y, f"Fecha y hora: {report['timestamp']}")
+    y -= 20
+    p.drawString(50, y, f"Procesos Activos: {report['active_processes']}")
+    y -= 20
+    p.drawString(50, y, f"Uso de CPU (%): {report['cpu_usage']}")
+    y -= 20
+    p.drawString(50, y, f"Uso de Disco (%): {report['disk_usage']}")
+    y -= 20
+    p.drawString(50, y, f"Uso de Memoria (%): {report['memory_usage']}")
+    
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+
+    return Response(
+        buffer,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=system_report.pdf"}
+    )
 
 
 
