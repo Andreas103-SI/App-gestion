@@ -10,10 +10,10 @@ from send import send_notification
 from reports import get_system_report
 from logger_config import logger
 import csv
-from io import StringIO
 from flask import Response
 from io import BytesIO
 from reportlab.pdfgen import canvas
+from io import BytesIO, StringIO
 
 
 
@@ -197,69 +197,65 @@ def notificaciones():
     notificaciones = cursor.fetchall()
     return render_template('notificaciones.html', notificaciones=notificaciones)
 
-# Ruta para crear informes del sistema y mostrar en una plantilla HTML
+# Ruta para mostrar el informe del sistema en una plantilla HTML
 @app.route('/system_report')
 def system_report():
-    report = get_system_report()  # Aquí obtienes el informe de 'reports.py'
+    report = get_system_report()  # Obtiene el informe desde 'reports.py'
     return render_template('system_report.html', report=report)
 
-
-# Ruta para exportar el informe del sistema a un archivo CSV
-@app.route('/export/csv')
+# Ruta para exportar el informe a CSV
+@app.route('/export_csv')
 def export_csv():
     report = get_system_report()  # Obtiene el informe del sistema
-    si = StringIO()
-    writer = csv.writer(si)
 
-    # Escribe el encabezado y los datos del informe
-    writer.writerow(["Métrica", "Valor"])
-    writer.writerow(["Fecha y hora", report['timestamp']])
-    writer.writerow(["Procesos Activos", report['active_processes']])
-    writer.writerow(["Uso de CPU (%)", report['cpu_usage']])
-    writer.writerow(["Uso de Disco (%)", report['disk_usage']])
-    writer.writerow(["Uso de Memoria (%)", report['memory_usage']])
+    # Prepara los datos del informe
+    output = []
+    output.append(['Fecha y Hora', report['timestamp']])
+    output.append(['Procesos Activos', report['active_processes']])
+    output.append(['Uso de CPU (%)', report['cpu_usage']])
+    output.append(['Uso de Disco (%)', report['disk_usage']])
+    output.append(['Uso de Memoria (%)', report['memory_usage']])
     
-    output = si.getvalue()
-    return Response(
-        output,
-        mimetype="text/csv",
-        headers={"Content-Disposition": "attachment; filename=system_report.csv"}
-    )
+    si = BytesIO()  # Usamos BytesIO para trabajar con datos binarios
+    writer = csv.writer(si)
+    writer.writerows(output)
+    si.seek(0)
 
+    return Response(si.getvalue(),
+                    mimetype="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=system_report.csv"})
 
-# Ruta para exportar el informe del sistema a un archivo PDF
-@app.route('/export/pdf')
+# Ruta para exportar el informe a PDF
+@app.route('/export_pdf')
 def export_pdf():
     report = get_system_report()  # Obtiene el informe del sistema
     buffer = BytesIO()
-    p = canvas.Canvas(buffer)
+    pdf = canvas.Canvas(buffer)
 
     # Título del informe
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(50, 800, "Informe de Uso del Sistema")
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(50, 800, "Informe de Uso del Sistema")
     
     # Contenido del informe
-    p.setFont("Helvetica", 12)
+    pdf.setFont("Helvetica", 12)
     y = 770
-    p.drawString(50, y, f"Fecha y hora: {report['timestamp']}")
+    pdf.drawString(50, y, f"Fecha y Hora: {report['timestamp']}")
     y -= 20
-    p.drawString(50, y, f"Procesos Activos: {report['active_processes']}")
+    pdf.drawString(50, y, f"Procesos Activos: {report['active_processes']}")
     y -= 20
-    p.drawString(50, y, f"Uso de CPU (%): {report['cpu_usage']}")
+    pdf.drawString(50, y, f"Uso de CPU (%): {report['cpu_usage']}")
     y -= 20
-    p.drawString(50, y, f"Uso de Disco (%): {report['disk_usage']}")
+    pdf.drawString(50, y, f"Uso de Disco (%): {report['disk_usage']}")
     y -= 20
-    p.drawString(50, y, f"Uso de Memoria (%): {report['memory_usage']}")
+    pdf.drawString(50, y, f"Uso de Memoria (%): {report['memory_usage']}")
     
-    p.showPage()
-    p.save()
+    pdf.showPage()
+    pdf.save()
     buffer.seek(0)
 
-    return Response(
-        buffer,
-        mimetype="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=system_report.pdf"}
-    )
+    return Response(buffer.getvalue(),
+                    mimetype="application/pdf",
+                    headers={"Content-Disposition": "attachment; filename=system_report.pdf"})
 
 
 
