@@ -2,14 +2,20 @@ import pytest
 import PyPDF2
 from app import app
 from io import BytesIO
+from unittest.mock import patch, MagicMock
+from flask import url_for
+from flask_login import login_user  # Importa login_user
 
 
 @pytest.fixture
 def cliente():
     app.config['TESTING'] = True
-    with app.test_client() as cliente:
-        yield cliente
+    # Crea el cliente de prueba y un contexto de aplicación
+    with app.test_client() as client:
+        with app.app_context():
+            yield client
 
+#En este test se verifica que la página de inicio se cargue correctamente
 def test_home(cliente):
     respuesta = cliente.get('/')
     # Si se recibe un 302, seguimos la redirección
@@ -17,12 +23,14 @@ def test_home(cliente):
         respuesta = cliente.get(respuesta.headers['Location'])
     assert respuesta.status_code == 200  # Verifica que la página cargue correctamente
 
+#En este test se verifica que la página de reportes se cargue correctamente
 def test_home(cliente):
     respuesta = cliente.get('/')
     if respuesta.status_code == 302:
         respuesta = cliente.get(respuesta.headers['Location'])
     assert respuesta.status_code == 200
 
+#En este test se verifica que la página de reportes se cargue correctamente
 def test_reportes(cliente):
     respuesta = cliente.get('/system_report')
     if respuesta.status_code == 302:
@@ -42,6 +50,8 @@ def test_export_csv(cliente):
     assert b'Uso de Disco (%)' in respuesta.data  # Verifica que los datos contienen 'Uso de Disco (%)'
     assert b'Uso de Memoria (%)' in respuesta.data  # Verifica que los datos contienen 'Uso de Memoria (%)'
 
+
+#En este test se verifica que la página de exportación de datos se cargue correctamente en formato PDF.
 def test_export_pdf(cliente):
     respuesta = cliente.get('/export_pdf')
     
@@ -67,9 +77,14 @@ def test_export_pdf(cliente):
     assert 'Uso de Disco (%)' in text
     assert 'Uso de Memoria (%)' in text
 
+
+#Test para system_report
 def test_reportes(cliente):
     respuesta = cliente.get('/system_report')
     if respuesta.status_code == 302:
         respuesta = cliente.get(respuesta.headers['Location'])
     assert respuesta.status_code == 200
     assert b'Informe' in respuesta.data  # Ahora 'Informe' estará presente en los datos JSON
+
+
+

@@ -212,30 +212,6 @@ def system_report():
 
 # Ruta para exportar el informe a CSV
 
-'''@app.route('/export_csv')
-def export_csv():
-    report = get_system_report()  # Obtiene el informe del sistema
-
-    # Prepara los datos del informe
-    output = []
-    output.append(['Fecha y Hora', report['timestamp']])
-    output.append(['Procesos Activos', report['active_processes']])
-    output.append(['Uso de CPU (%)', report['cpu_usage']])
-    output.append(['Uso de Disco (%)', report['disk_usage']])
-    output.append(['Uso de Memoria (%)', report['memory_usage']])
-    
-    # Usamos StringIO para trabajar con cadenas
-    si = StringIO()
-    writer = csv.writer(si)
-    writer.writerows(output)
-    
-    csv_data = si.getvalue()  # Esto es un string
-    
-    return Response(csv_data,
-                    mimetype="text/csv",
-                    headers={"Content-Disposition": "attachment; filename=system_report.csv"})
-'''
-
 @app.route('/export_csv')
 def export_csv():
     report = get_system_report()  # Obtiene el informe del sistema
