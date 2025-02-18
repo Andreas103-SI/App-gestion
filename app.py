@@ -11,7 +11,6 @@ from reports import get_system_report
 from logger_config import logger
 import csv
 from flask import Response
-from io import BytesIO
 from reportlab.pdfgen import canvas
 from io import BytesIO, StringIO
 import cProfile
@@ -267,6 +266,7 @@ def export_pdf():
                     headers={"Content-Disposition": "attachment; filename=system_report.pdf"})
 
 
+#Ruta para la gestion de tareas administrativas
 @app.route('/data')
 def data():
     return 'Datos importantes'
@@ -293,6 +293,8 @@ def profile_view():
     return response.data
 
 
+
+# Ruta de prueba para caché
 @app.route('/test_cache')
 @cache.cached(timeout=60)  # Se almacena en caché por 60 segundos
 def test_cache():
