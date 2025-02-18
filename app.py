@@ -211,6 +211,31 @@ def system_report():
     return render_template('system_report.html', report=report)
 
 # Ruta para exportar el informe a CSV
+
+'''@app.route('/export_csv')
+def export_csv():
+    report = get_system_report()  # Obtiene el informe del sistema
+
+    # Prepara los datos del informe
+    output = []
+    output.append(['Fecha y Hora', report['timestamp']])
+    output.append(['Procesos Activos', report['active_processes']])
+    output.append(['Uso de CPU (%)', report['cpu_usage']])
+    output.append(['Uso de Disco (%)', report['disk_usage']])
+    output.append(['Uso de Memoria (%)', report['memory_usage']])
+    
+    # Usamos StringIO para trabajar con cadenas
+    si = StringIO()
+    writer = csv.writer(si)
+    writer.writerows(output)
+    
+    csv_data = si.getvalue()  # Esto es un string
+    
+    return Response(csv_data,
+                    mimetype="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=system_report.csv"})
+'''
+
 @app.route('/export_csv')
 def export_csv():
     report = get_system_report()  # Obtiene el informe del sistema
@@ -223,14 +248,19 @@ def export_csv():
     output.append(['Uso de Disco (%)', report['disk_usage']])
     output.append(['Uso de Memoria (%)', report['memory_usage']])
     
-    si = BytesIO()  # Usamos BytesIO para trabajar con datos binarios
+    si = StringIO()
     writer = csv.writer(si)
     writer.writerows(output)
-    si.seek(0)
+    
+    csv_data = si.getvalue()  # Esto es un string
+    
+    # Creamos la respuesta con un content type exacto:
+    respuesta = Response(csv_data,
+                         mimetype="text/csv",
+                         headers={"Content-Disposition": "attachment; filename=system_report.csv"})
+    respuesta.headers['Content-Type'] = "text/csv"  # Forzamos el content type exacto
+    return respuesta
 
-    return Response(si.getvalue(),
-                    mimetype="text/csv",
-                    headers={"Content-Disposition": "attachment; filename=system_report.csv"})
 
 # Ruta para exportar el informe a PDF
 @app.route('/export_pdf')
