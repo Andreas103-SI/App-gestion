@@ -1,5 +1,7 @@
 import pytest
+import PyPDF2
 from app import app
+from io import BytesIO
 
 @pytest.fixture
 def cliente():
@@ -40,3 +42,27 @@ def test_export_csv(cliente):
     assert b'Uso de Disco (%)' in respuesta.data  # Verifica que los datos contienen 'Uso de Disco (%)'
     assert b'Uso de Memoria (%)' in respuesta.data  # Verifica que los datos contienen 'Uso de Memoria (%)'
 
+def test_export_pdf(cliente):
+    respuesta = cliente.get('/export_pdf')
+    
+    # Verifica que la respuesta sea exitosa
+    assert respuesta.status_code == 200
+
+    # Verifica que el tipo de contenido sea PDF
+    assert 'application/pdf' in respuesta.content_type  
+
+    # Leer el PDF desde los datos binarios de la respuesta
+    pdf_data = respuesta.data
+    pdf_file = BytesIO(pdf_data)
+    pdf_reader = PyPDF2.PdfReader(pdf_file)
+
+    # Extraer el texto del primer página del PDF
+    page = pdf_reader.pages[0]
+    text = page.extract_text()
+
+    # Verifica que el texto esperado esté presente en el PDF
+    assert 'Fecha y Hora' in text
+    assert 'Procesos Activos' in text
+    assert 'Uso de CPU (%)' in text
+    assert 'Uso de Disco (%)' in text
+    assert 'Uso de Memoria (%)' in text
