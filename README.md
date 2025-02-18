@@ -36,6 +36,7 @@ Esta aplicación web está desarrollada utilizando Python y Flask. Su objetivo e
 - **Objetivo:** Garantizar la estabilidad y calidad del código.
 - **Herramientas:** Se pueden utilizar frameworks como `pytest` o `unittest`.
 - **Ejemplo básico de prueba con pytest:**
+
   ```python
   # test_app.py
   import pytest
@@ -50,3 +51,53 @@ Esta aplicación web está desarrollada utilizando Python y Flask. Su objetivo e
       response = client.get('/data')
       assert response.status_code == 200
       assert b'Datos importantes' in response.data
+
+## Requisitos
+- Python 3.x
+- MySQL (se puede gestionar con XAMPP)
+- Flask
+- Dependencias adicionales (ver requirements.txt)
+
+## Instalación
+** clonar repositorio**
+git clone https://github.com/Andreas103-SI/ProyectoApp.git
+cd proyecto_app
+
+2. Crear un entorno virtual e instalar dependencias
+
+python -m venv venv
+# En Windows:
+venv\Scripts\activate
+# En macOS/Linux:
+source venv/bin/activate
+pip install -r requirements.txt
+
+3. Instalar dependencias adicionales
+pip install flask-caching
+pip install pytest
+
+4. Configurar la base de datos
+Asegúrate de que MySQL esté corriendo (por ejemplo, con XAMPP) y crea la base de datos:
+
+Configura las credenciales de la base de datos en el archivo config.py.
+
+5. Ejecutar la aplicación
+
+python app.py
+
+- La aplicación estará disponible en http://127.0.0.1:5000/.
+
+### Notas
+- El archivo .gitignore está configurado para excluir archivos innecesarios, como __pycache__ y el entorno virtual venv.
+- Se recomienda actualizar pip a la última versión:
+  python -m pip install --upgrade pip
+- Algunas funcionalidades, como el envío de notificaciones por correo electrónico, requieren       configuración adicional.
+- La aplicación utiliza herencia de plantillas con Jinja2 para mantener una interfaz consistente en todas las páginas.
+- Las pruebas automatizadas ayudan a garantizar que las futuras optimizaciones y cambios no introduzcan errores en la aplicación.
+
+### Contribución 
+Si deseas contribuir a este proyecto, por favor, abre un "issue" o envía un "pull request" en GitHub.
+
+### Licencia
+
+Este proyecto está bajo la licencia [Publica General GNU v3.0].
