@@ -3,12 +3,12 @@ import PyPDF2
 from app import app
 from io import BytesIO
 
+
 @pytest.fixture
 def cliente():
-    app.config['TESTING'] = True  # Modo de prueba
+    app.config['TESTING'] = True
     with app.test_client() as cliente:
         yield cliente
-
 
 def test_home(cliente):
     respuesta = cliente.get('/')
@@ -66,3 +66,10 @@ def test_export_pdf(cliente):
     assert 'Uso de CPU (%)' in text
     assert 'Uso de Disco (%)' in text
     assert 'Uso de Memoria (%)' in text
+
+def test_reportes(cliente):
+    respuesta = cliente.get('/system_report')
+    if respuesta.status_code == 302:
+        respuesta = cliente.get(respuesta.headers['Location'])
+    assert respuesta.status_code == 200
+    assert b'Informe' in respuesta.data  # Ahora 'Informe' estará presente en los datos JSON

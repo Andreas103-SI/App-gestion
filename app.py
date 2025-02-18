@@ -207,8 +207,8 @@ def notificaciones():
 # Ruta para mostrar el informe del sistema en una plantilla HTML
 @app.route('/system_report')
 def system_report():
-    report = get_system_report()  # Obtiene el informe desde 'reports.py'
-    return render_template('system_report.html', report=report)
+    report = get_system_report()  # Función que genera el informe
+    return jsonify(report)  # Devuelve el informe como un JSON
 
 # Ruta para exportar el informe a CSV
 
