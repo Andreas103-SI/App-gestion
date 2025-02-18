@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Esta aplicación web está desarrollada utilizando Python y Flask. Su objetivo es facilitar la gestión administrativa y la optimización de recursos en sistemas informáticos. La aplicación incluye funcionalidades para la gestión de usuarios, autenticación, monitoreo de recursos, optimización de procesos y generación de informes detallados.
+Esta aplicación web está desarrollada utilizando Python y Flask. Su objetivo es facilitar la gestión administrativa y la optimización de recursos en sistemas informáticos. La aplicación incluye funcionalidades para la gestión de usuarios, autenticación, monitoreo de recursos, optimización de procesos, generación de informes detallados y pruebas automatizadas para asegurar la calidad del código.
 
 ## Funcionalidades
 
@@ -32,17 +32,21 @@ Esta aplicación web está desarrollada utilizando Python y Flask. Su objetivo e
 - Visualización de informes en una página dedicada.
 - Exportación de informes en formatos CSV y PDF mediante botones en la interfaz.
 
-## Requisitos
+### 6. Pruebas Automatizadas
+- **Objetivo:** Garantizar la estabilidad y calidad del código.
+- **Herramientas:** Se pueden utilizar frameworks como `pytest` o `unittest`.
+- **Ejemplo básico de prueba con pytest:**
+  ```python
+  # test_app.py
+  import pytest
+  from app import app
 
-- Python 3.x
-- MySQL (se puede gestionar con XAMPP)
-- Flask
-- Dependencias adicionales (ver `requirements.txt`)
+  @pytest.fixture
+  def client():
+      with app.test_client() as client:
+          yield client
 
-## Instalación
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/Andreas103-SI/ProyectoApp.git
-cd proyecto_app
+  def test_data_route(client):
+      response = client.get('/data')
+      assert response.status_code == 200
+      assert b'Datos importantes' in response.data
