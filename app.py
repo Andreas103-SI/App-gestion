@@ -19,7 +19,6 @@ from flask_caching import Cache
 from config import Config
 
 
-
 app = Flask(__name__)
 app.config.from_object('config.Config')  # Cargar configuración desde config.py
 
