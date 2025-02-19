@@ -221,3 +221,73 @@ input:focus {
 }
 
 
+
+/* ============================= */
+/* Estilos de las notificaciones  System_report.html*/
+/* ============================= */
+
+
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Añadir margen superior */
+    margin-bottom: 20px; /* Añadir margen inferior */
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 14px; /* Tamaño de texto más pequeño */
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+
+td {
+    background-color: #fff;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para los botones */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    margin: 10px 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Estilo para el título */
+h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}

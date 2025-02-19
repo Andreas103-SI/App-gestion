@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Notificaciones de Tareas Administrativas</title>
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f2f2f2; }
-    </style>
-</head>
-<body>
-    <h1>Limpieza de logs</h1>
-    <table>
-        <thead>
+{% extends "base.html" %}
+
+{% block title %}Notificaciones de Tareas Administrativas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Notificaciones de Tareas Administrativas</h1>
+    
+    <!-- Tabla de notificaciones -->
+    <table class="table table-bordered mt-4">
+        <thead class="thead-light">
             <tr>
                 <th>ID</th>
                 <th>Tarea</th>
@@ -33,5 +29,8 @@
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+
+    <!-- Botón para volver al administrador -->
+    <a href="{{ url_for('index') }}" class="btn btn-primary mt-4">Salir</a>
+</div>
+{% endblock %}

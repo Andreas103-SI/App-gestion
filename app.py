@@ -203,6 +203,13 @@ def notificaciones():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM notificaciones ORDER BY fecha DESC")
     notificaciones = cursor.fetchall()
+
+    # Procesar las notificaciones para formatear el mensaje (si es necesario)
+    for noti in notificaciones:
+        # Si el mensaje contiene una lista de diccionarios (por ejemplo, procesos), solo mostrar los nombres de los procesos
+        if isinstance(noti[2], list):
+            noti[2] = ', '.join([str(item['name']) for item in noti[2]])  # Solo mostrar nombres de procesos
+    
     return render_template('notificaciones.html', notificaciones=notificaciones)
 
 # Ruta para mostrar el informe del sistema en una plantilla HTML
