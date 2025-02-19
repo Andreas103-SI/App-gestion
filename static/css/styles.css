@@ -172,8 +172,31 @@ input:focus {
     background-color: #ffc107;
 }
 
+.exit-btn {
+    background-color: #dc3545; /* Rojo Bootstrap */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    width: fit-content;
+    margin: 20px 0 0 auto; /* Empuja el botón a la derecha */
+}
+
+.exit-btn:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+}
+
+
 @media (max-width: 768px) {
     .monitor-container {
         width: 90%;
     }
 }
+
+
