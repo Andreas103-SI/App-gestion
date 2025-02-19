@@ -35,22 +35,6 @@ Esta aplicación web está desarrollada utilizando Python y Flask. Su objetivo e
 ### 6. Pruebas Automatizadas
 - **Objetivo:** Garantizar la estabilidad y calidad del código.
 - **Herramientas:** Se pueden utilizar frameworks como `pytest` o `unittest`.
-- **Ejemplo básico de prueba con pytest:**
-
-  ```python
-  # test_app.py
-  import pytest
-  from app import app
-
-  @pytest.fixture
-  def client():
-      with app.test_client() as client:
-          yield client
-
-  def test_data_route(client):
-      response = client.get('/data')
-      assert response.status_code == 200
-      assert b'Datos importantes' in response.data
 
 ## Requisitos
 - Python 3.x
