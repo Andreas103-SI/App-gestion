@@ -3,30 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoreo de Recursos</title>
+    <title>Monitor de Recursos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
     <script>
-        function fetchOptimizerData() {
-            fetch('/optimizer')
+        function fetchSystemUsage() {
+            fetch('/monitor')
                 .then(response => response.json())
                 .then(data => {
-                    let messageElement = document.getElementById('optimizer-message');
-                    if (data.inefficient_processes && data.inefficient_processes.length > 0) {
-                        messageElement.innerHTML = `<b>Procesos ineficientes detectados y terminados:</b><br>${JSON.stringify(data.inefficient_processes, null, 2)}`;
-                        messageElement.style.color = 'red';
-                    } else {
-                        messageElement.innerHTML = "✅ No se encontraron procesos ineficientes.";
-                        messageElement.style.color = 'green';
-                    }
+                    // Actualiza las barras de progreso
+                    document.getElementById('cpu-usage').style.width = data.cpu + "%";
+                    document.getElementById('memory-usage').style.width = data.memory + "%";
+                    document.getElementById('disk-usage').style.width = data.disk + "%";
+    
+                    document.getElementById('cpu-usage').textContent = data.cpu + "%";
+                    document.getElementById('memory-usage').textContent = data.memory + "%";
+                    document.getElementById('disk-usage').textContent = data.disk + "%";
+    
+                    // Opcional: Actualiza el mensaje de optimización o estado
+                    document.getElementById('optimizer-message').textContent = "Datos actualizados";
                 })
                 .catch(error => {
                     console.error("Error obteniendo datos:", error);
-                    document.getElementById('optimizer-message').innerHTML = "❌ Error al obtener los datos.";
+                    document.getElementById('optimizer-message').textContent = "Error al obtener datos";
                 });
         }
-    </script>
-</head>
-<body onload="fetchOptimizerData()">
-    <h1>Monitoreo y Optimización de Procesos</h1>
-    <p id="optimizer-message">Cargando información...</p>
+    
+        // Llama a la función cada 3 segundos y al cargar la página
+        setInterval(fetchSystemUsage, 3000);
+    </script></head>
+<body onload="fetchSystemUsage()">
+    <div class="monitor-container">
+        <h1>Monitoreo y Optimización de Recursos</h1>
+        <p id="optimizer-message">Cargando información...</p>
+
+        <div class="usage-container">
+            <div>
+                <p>Uso de CPU</p>
+                <div class="usage-bar">
+                    <div class="usage-fill cpu" id="cpu-usage"></div>
+                </div>
+            </div>
+            <div>
+                <p>Uso de Memoria</p>
+                <div class="usage-bar">
+                    <div class="usage-fill memory" id="memory-usage"></div>
+                </div>
+            </div>
+            <div>
+                <p>Uso de Disco</p>
+                <div class="usage-bar">
+                    <div class="usage-fill disk" id="disk-usage"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Salir</a>
+
 </body>
 </html>

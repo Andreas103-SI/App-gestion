@@ -9,13 +9,11 @@ body {
 /* ============================= */
 /* Estilos de la Navbar */
 /* ============================= */
-/* Estilos navbar */
 .navbar {
     background-color: #1e1e2f !important; /* Color oscuro elegante */
     padding: 15px;
 }
 
-/* Ajuste para evitar que los botones queden fuera */
 .navbar .container-fluid {
     display: flex;
     justify-content: space-between;
@@ -23,7 +21,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Estilos para los botones de la navbar */
 .navbar .nav-link {
     color: white !important; /* Texto blanco */
     padding: 10px 15px; /* Espaciado interno */
@@ -33,14 +30,12 @@ body {
     font-weight: bold;
 }
 
-/* Elimina el efecto hover llamativo */
 .navbar .nav-link:hover {
     background-color: #007bff !important; /* Se mantiene el color azul */
     border: none;
     transform: none;
 }
 
-/* Para evitar que los botones se salgan cuando la pantalla es más grande */
 @media (min-width: 992px) {
     .navbar-nav {
         display: flex;
@@ -48,7 +43,6 @@ body {
     }
 }
 
-/* Ajuste para pantallas pequeñas */
 @media (max-width: 768px) {
     .navbar .nav-link {
         display: block;
@@ -58,35 +52,26 @@ body {
     }
 }
 
-/* Ajuste para pantallas pequeñas */
-@media (max-width: 768px) {
-    .navbar .nav-link {
-        display: block;
-        text-align: center;
-        width: 100%;
-        margin-bottom: 5px;
-    }
-}
 
 /* ============================= */
 /* Estilos para los botones */
 /* ============================= */
 .btn, button {
-    background-color: #007bff;  /* Azul principal */
-    color: white;               /* Texto en blanco */
-    border: none;               /* Sin bordes */
-    border-radius: 5px;         /* Bordes redondeados */
-    padding: 10px 15px;         /* Espaciado interno */
-    font-size: 16px;            /* Tamaño de fuente */
-    cursor: pointer;            /* Cambia el cursor en hover */
+    background-color: #007bff; /* Azul principal */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor en hover */
     transition: all 0.3s ease-in-out;
 }
 
-/* Efecto hover para botones */
-.btn:hover, 
+.btn:hover,
 button:hover {
     background-color: #0056b3; /* Azul más oscuro */
 }
+
 
 /* ============================= */
 /* Estilos del formulario de registro */
@@ -115,12 +100,80 @@ input:focus {
     outline: none;
 }
 
-/* ============================= */
-/* Responsive para el formulario */
-/* ============================= */
 @media (max-width: 480px) {
     .form-container {
         width: 90%;
         padding: 20px;
+    }
+}
+
+
+/* ============================= */
+/* Estilos del monitor */
+/* ============================= */
+.monitor-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Centrar el texto dentro del contenedor */
+}
+
+.monitor-container h1 { /* Estilo específico para el h1 dentro del monitor */
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #1e1e2f;
+}
+
+#optimizer-message {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.usage-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.usage-bar {
+    height: 25px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #ddd;
+    position: relative;
+    width: 100%;
+}
+
+.usage-fill {
+    height: 100%;
+    width: 0%;
+    text-align: center;
+    line-height: 25px;
+    color: white;
+    font-weight: bold;
+    transition: width 0.5s ease-in-out;
+}
+
+.usage-fill.cpu {
+    background-color: #007bff;
+}
+
+.usage-fill.memory {
+    background-color: #28a745;
+}
+
+.usage-fill.disk {
+    background-color: #ffc107;
+}
+
+@media (max-width: 768px) {
+    .monitor-container {
+        width: 90%;
     }
 }
