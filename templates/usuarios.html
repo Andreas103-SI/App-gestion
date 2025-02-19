@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Usuarios</title>
-</head>
-<body>
+
+{% extends "base.html" %}
+
+{% block title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<div class="container">
     <h1>Gestión de Usuarios</h1>
     <table>
         <tr>
@@ -37,5 +37,8 @@
         </tr>
         {% endfor %}
     </table>
-</body>
-</html>
+    
+    <!-- Botón para volver al Administrador -->
+    <a href="{{ url_for('index') }}" class="admin-back-btn">Salir</a>
+</div>
+{% endblock %}

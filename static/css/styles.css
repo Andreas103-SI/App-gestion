@@ -291,3 +291,101 @@ h1 {
     color: #333;
     margin-bottom: 20px;
 }
+
+/* ============================= */
+/* Estilos Gestion de usuarios http://127.0.0.1:5000/usuarios
+/* ============================= */
+
+/* Estilos generales */
+body {
+    background-color: #f4f4f9;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Título */
+h1 {
+    text-align: center;
+    color: #1e1e2f;
+    margin-bottom: 20px;
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para formularios embebidos (editar/borrar) */
+form {
+    display: inline;
+}
+
+input[type="text"],
+input[type="email"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Estilos para botones de acción */
+button {
+    padding: 6px 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el botón de volver */
+.admin-back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.admin-back-btn:hover {
+    background-color: #c82333;
+}
+
