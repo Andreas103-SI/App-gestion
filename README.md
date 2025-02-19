@@ -87,6 +87,11 @@ python app.py
 
 - La aplicación estará disponible en http://127.0.0.1:5000/.
 
+6. Ejecutar los test 
+
+venv\Scripts\python.exe -m pytest
+
+
 ### Notas
 - El archivo .gitignore está configurado para excluir archivos innecesarios, como __pycache__ y el entorno virtual venv.
 - Se recomienda actualizar pip a la última versión:
