@@ -192,6 +192,7 @@ def optimizer():
         return jsonify({'status': 'error', 'message': 'Error en la optimización.'}), 500
 
 
+
 #Gestion de tareas Administrativas
 ''' Aqui se muestra la gestion de tareas administrativas, como la creacion de notificaciones de limpieza de logs'''
 
