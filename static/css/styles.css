@@ -9,34 +9,62 @@ body {
 /* ============================= */
 /* Estilos de la Navbar */
 /* ============================= */
+/* Estilos navbar */
 .navbar {
-    background-color: #1e1e2f !important; /* Un tono oscuro elegante */
-    padding: 10px;
+    background-color: #1e1e2f !important; /* Color oscuro elegante */
+    padding: 15px;
 }
 
-.navbar-brand, 
-.nav-link {
-    color: #ffffff !important; /* Texto blanco */
+/* Ajuste para evitar que los botones queden fuera */
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
+/* Estilos para los botones de la navbar */
 .navbar .nav-link {
-    padding: 10px 15px;
+    color: white !important; /* Texto blanco */
+    padding: 10px 15px; /* Espaciado interno */
     border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s;
-}
-
-.navbar .nav-link:hover {
     background-color: #007bff; /* Azul Bootstrap */
-    transform: scale(1.1);
-    border: 2px solid white;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-/* Diseño responsive para la navbar */
+/* Elimina el efecto hover llamativo */
+.navbar .nav-link:hover {
+    background-color: #007bff !important; /* Se mantiene el color azul */
+    border: none;
+    transform: none;
+}
+
+/* Para evitar que los botones se salgan cuando la pantalla es más grande */
+@media (min-width: 992px) {
+    .navbar-nav {
+        display: flex;
+        gap: 10px; /* Espacio entre botones */
+    }
+}
+
+/* Ajuste para pantallas pequeñas */
 @media (max-width: 768px) {
     .navbar .nav-link {
         display: block;
         text-align: center;
-        margin: 5px 0;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 768px) {
+    .navbar .nav-link {
+        display: block;
+        text-align: center;
+        width: 100%;
+        margin-bottom: 5px;
     }
 }
 
